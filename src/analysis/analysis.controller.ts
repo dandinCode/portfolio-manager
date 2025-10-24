@@ -1,27 +1,21 @@
-import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Post } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AnalysisService } from './analysis.service';
 import { GetStocksDto } from './dto/get-stocks.dto';
-import { firstValueFrom } from 'rxjs';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  AnalysisResult,
+  PortfolioOptimization,
+} from './interfaces/analysis-result.interface';
 
 @ApiTags('Analysis')
 @Controller('analysis')
 export class AnalysisController {
-  private readonly optimizerUrl: string;
-
-  constructor(
-    private readonly analysisService: AnalysisService,
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {
-    this.optimizerUrl = this.configService.get<string>('OPTIMIZER_API_URL')!;
-  }
+  constructor(private readonly analysisService: AnalysisService) {}
 
   @Post('analyze')
   @ApiOperation({
-    summary: 'Analisa um conjunto de ações e retorna métricas financeiras',
+    summary:
+      'Analisa um conjunto de ações e retorna métricas financeiras otimizadas',
   })
   @ApiResponse({ status: 200, description: 'Análise realizada com sucesso' })
   @ApiResponse({
@@ -29,25 +23,11 @@ export class AnalysisController {
     description: 'Erro de validação nos parâmetros enviados',
   })
   @ApiBody({ type: GetStocksDto })
-  async analyzeStocks(@Body() getStocksDto: GetStocksDto) {
-    const analysis = await this.analysisService.getStocksData(getStocksDto);
-
-    try {
-      const response = await firstValueFrom(
-        this.httpService.post(this.optimizerUrl, analysis),
-      );
-
-      return {
-        analysis,
-        optimization: response.data,
-      };
-    } catch (error) {
-      console.error('Error calling optimization API:', error.message);
-      return {
-        analysis,
-        optimization: null,
-        error: 'Failed to call optimization API',
-      };
-    }
+  async analyzeStocks(@Body() dto: GetStocksDto): Promise<{
+    analysis: AnalysisResult;
+    optimization: PortfolioOptimization | null;
+    error?: string;
+  }> {
+    return this.analysisService.optimizePortfolio(dto);
   }
 }

@@ -1,10 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import yahooFinance from 'yahoo-finance2';
 import { GetStocksDto } from './dto/get-stocks.dto';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
+import { firstValueFrom } from 'rxjs';
+import {
+  AnalysisResult,
+  PortfolioOptimization,
+} from './interfaces/analysis-result.interface';
 
 @Injectable()
 export class AnalysisService {
-  async getStocksData(getStocksDto: GetStocksDto) {
+  private readonly optimizerUrl: string;
+
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {
+    this.optimizerUrl = this.configService.get<string>('OPTIMIZER_API_URL')!;
+  }
+
+  async getStocksData(getStocksDto: GetStocksDto): Promise<AnalysisResult> {
     const stock_list: string[] = [];
     const dy_list: number[] = [];
     const std_dev_list: number[] = [];
@@ -51,7 +67,6 @@ export class AnalysisService {
           returns.reduce((sum, r) => sum + Math.pow(r - meanReturn, 2), 0) /
           (returns.length - 1);
         const stdDevDaily = Math.sqrt(variance);
-
         const stdDevAnnual = stdDevDaily * Math.sqrt(252);
 
         stock_list.push(symbol);
@@ -71,5 +86,33 @@ export class AnalysisService {
       sectors_list,
       acceptable_risk: getStocksDto.acceptableRisk,
     };
+  }
+
+  async optimizePortfolio(
+    getStocksDto: GetStocksDto,
+  ): Promise<{
+    analysis: AnalysisResult;
+    optimization: PortfolioOptimization | null;
+    error?: string;
+  }> {
+    const analysis = await this.getStocksData(getStocksDto);
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(this.optimizerUrl, analysis),
+      );
+
+      return {
+        analysis,
+        optimization: response.data,
+      };
+    } catch (error) {
+      console.error('Error calling optimization API:', error.message);
+      return {
+        analysis,
+        optimization: null,
+        error: 'Failed to call optimization API',
+      };
+    }
   }
 }
