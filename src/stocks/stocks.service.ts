@@ -5,13 +5,13 @@ import { GetStocksDto } from './dto/get-stocks.dto';
 @Injectable()
 export class StocksService {
   
-  async getStocksData(dto: GetStocksDto) {
+  async getStocksData(getStocksDto: GetStocksDto) {
     const stock_list: string[] = [];
     const dy_list: number[] = [];
     const std_dev_list: number[] = [];
     const sectors_list: string[] = [];
 
-    for (const symbol of dto.stocks) {
+    for (const symbol of getStocksDto.stocks) {
       try {
         const symbolWithSuffix = symbol.endsWith('.SA') ? symbol : `${symbol}.SA`;
 
@@ -25,8 +25,8 @@ export class StocksService {
           : 0;
 
         const historical = await yahooFinance.chart(symbolWithSuffix, {
-          period1: dto.start,
-          period2: dto.end,
+          period1: getStocksDto.start,
+          period2: getStocksDto.end,
           interval: '1d',
         });
 
@@ -61,7 +61,7 @@ export class StocksService {
       dy_list,
       standard_deviation_list: std_dev_list,
       sectors_list,
-      acceptable_risk: dto.acceptableRisk,
+      acceptable_risk: getStocksDto.acceptableRisk,
     };
   }
 }
