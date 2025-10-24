@@ -5,11 +5,8 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [
-    HttpModule,
-    ConfigModule,
-  ],
+  imports: [HttpModule, ConfigModule],
   providers: [AnalysisService],
-  controllers: [AnalysisController]
+  controllers: [AnalysisController],
 })
 export class AnalysisModule {}

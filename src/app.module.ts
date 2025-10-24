@@ -9,8 +9,11 @@ import { AnalysisModule } from './analysis/analysis.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    HttpModule,StocksModule, AnalysisModule],
+    HttpModule,
+    StocksModule,
+    AnalysisModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}//
+export class AppModule {} 
