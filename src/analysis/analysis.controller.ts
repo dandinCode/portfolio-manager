@@ -4,7 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { AnalysisService } from './analysis.service';
 import { GetStocksDto } from './dto/get-stocks.dto';
 import { firstValueFrom } from 'rxjs';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
+@ApiTags('Analysis')
 @Controller('analysis')
 export class AnalysisController {
       private readonly optimizerUrl: string;
@@ -18,6 +20,10 @@ export class AnalysisController {
       }
     
       @Post('analyze')
+      @ApiOperation({ summary: 'Analisa um conjunto de ações e retorna métricas financeiras' })
+      @ApiResponse({ status: 200, description: 'Análise realizada com sucesso' })
+      @ApiResponse({ status: 400, description: 'Erro de validação nos parâmetros enviados' })
+      @ApiBody({ type: GetStocksDto })
       async analyzeStocks(@Body() getStocksDto: GetStocksDto) {
         const analysis = await this.analysisService.getStocksData(getStocksDto);
     
