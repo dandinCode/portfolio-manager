@@ -30,10 +30,23 @@ model StockSymbol {
 
   createdById  Int?
   createdBy    User?      @relation(fields: [createdById], references: [id])
+  stocks       Stock[]    @relation("StockToSymbol")
 }
 
 enum StockStatus {
   pending
   validated
   invalid
+}
+
+model Stock {
+  id            Int         @id @default(autoincrement())
+  symbolId      Int
+  symbol        StockSymbol @relation(fields: [symbolId], references: [id], name: "StockToSymbol")
+  companyName   String
+  sector        String
+  dividendYield Float
+  volatility    Float
+  lastFetchedAt DateTime
+  createdAt     DateTime    @default(now())
 }
