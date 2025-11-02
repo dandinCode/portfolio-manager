@@ -19,7 +19,9 @@ model User {
   name      String
   email     String   @unique
   createdAt DateTime @default(now())
+
   stockSymbols StockSymbol[]
+  portfolios    Portfolio[]
 }
 
 model StockSymbol {
@@ -49,4 +51,28 @@ model Stock {
   volatility    Float
   lastFetchedAt DateTime
   createdAt     DateTime    @default(now())
+
+  portfolioStocks PortfolioStock[]
+}
+
+model Portfolio {
+  id          Int               @id @default(autoincrement())
+  name        String
+  userId      Int
+  user        User              @relation(fields: [userId], references: [id])
+  totalRisk   Float?
+  totalReturn Float?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  portfolioStocks PortfolioStock[]
+}
+
+model PortfolioStock {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  stockId      Int
+
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id])
+  stock        Stock      @relation(fields: [stockId], references: [id])
 }
