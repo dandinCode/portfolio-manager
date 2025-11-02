@@ -19,4 +19,21 @@ model User {
   name      String
   email     String   @unique
   createdAt DateTime @default(now())
+  stockSymbols StockSymbol[]
+}
+
+model StockSymbol {
+  id           Int        @id @default(autoincrement())
+  symbol       String     @unique
+  status       StockStatus @default(pending)
+  createdAt    DateTime   @default(now())
+
+  createdById  Int?
+  createdBy    User?      @relation(fields: [createdById], references: [id])
+}
+
+enum StockStatus {
+  pending
+  validated
+  invalid
 }
