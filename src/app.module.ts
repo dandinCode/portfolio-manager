@@ -5,6 +5,7 @@ import { StocksModule } from './stocks/stocks.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { AnalysisModule } from './analysis/analysis.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AnalysisModule } from './analysis/analysis.module';
     HttpModule,
     StocksModule,
     AnalysisModule,
+    PrismaModule
   ],
   controllers: [AppController],
   providers: [AppService],
