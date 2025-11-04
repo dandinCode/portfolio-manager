@@ -1,25 +1,35 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
+import { PrismaService } from '../src/prisma/prisma.service';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+describe('Stocks (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleRef.createNestApplication();
+    prisma = app.get(PrismaService);
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterAll(async () => {
+    await prisma.$disconnect();
+    await app.close();
+  });
+
+  it('/stocks/symbols (POST) deve criar um stock symbol', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/stocks/symbol')
+      .send({ symbol: 'AAPL' })
+      .expect(201);
+
+    expect(response.body.symbol).toBe('AAPL');
+    expect(response.body.id).toBeDefined();
   });
 });

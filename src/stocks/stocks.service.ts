@@ -1,12 +1,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateStockSymbolDto } from './dto/create-stock-symbol.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class StocksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createStockSyboml(dto: CreateStockSymbolDto) {
+  async createStockSymbol(dto: CreateStockSymbolDto) {
     const existing = await this.prisma.stockSymbol.findUnique({
       where: { symbol: dto.symbol },
     });

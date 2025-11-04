@@ -7,16 +7,16 @@ import { CreateStockSymbolDto } from './dto/create-stock-symbol.dto';
 export class StocksController {
   constructor(private readonly stocksService: StocksService) {}
 
-  @Post()
+  @Post('symbol')
   @ApiOperation({ summary: 'Cadastra um novo símbolo de ação' })
   @ApiResponse({ status: 201, description: 'Símbolo cadastrado com sucesso' })
   @ApiResponse({ status: 409, description: 'Símbolo já existe' })
   @ApiBody({ type: CreateStockSymbolDto })
   async create(@Body() dto: CreateStockSymbolDto) {
-    return this.stocksService.createStockSyboml(dto);
+    return this.stocksService.createStockSymbol(dto);
   }
 
-  @Get()
+  @Get('symbols')
   @ApiOperation({ summary: 'Lista todos os símbolos cadastrados' })
   async findAll() {
     return this.stocksService.findAllStockSymbols();
