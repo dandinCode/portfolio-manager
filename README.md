@@ -1,50 +1,73 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Portfolio Manager
+(Em desenvolvimento)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descrição
+O Portfolio Manager é uma aplicação backend desenvolvida em NestJS que tem como objetivo permitir o gerenciamento completo de carteiras de investimento em ações.
+O sistema possibilita que o usuário cadastre, gerencie e avalie ações, bem como monitore o desempenho e o risco total de seu portfólio.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A aplicação integra-se a duas fontes externas principais:
 
-## Description
+1. **[Yahoo Finance (YFinance API)](https://pypi.org/project/yfinance/)** — utilizada para **obter informações atualizadas e detalhadas sobre as ações**, como preço, volatilidade e dividend yield.  
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+2. **[Portfolio Optimized API](https://github.com/dandinCode/portfolioOptimizedAPI/blob/main/app/optimizer.py)** — um serviço externo responsável por **calcular a melhor combinação de ativos** dentro de um conjunto de ações, com base em métricas de risco e retorno esperados.  
 
-## Project setup
+---
+
+Com essa arquitetura, o sistema permitirá:
+
+- Registrar ações e símbolos financeiros manualmente.  
+- Sincronizar dados de mercado em tempo real através da YFinance API.  
+- Criar e gerenciar carteiras de investimento.  
+- Avaliar automaticamente o risco e retorno de cada portfólio.  
+- Obter sugestões otimizadas de alocação de ativos para maximizar o retorno esperado com base no perfil de risco do investidor.  
+
+## Stack Tecnológica
+
+- NestJS – Framework backend principal (arquitetura modular e escalável)
+
+- Prisma ORM – Mapeamento e acesso ao banco de dados
+
+- MySQL – Banco de dados relacional utilizado para persistência dos dados
+
+- TypeScript – Linguagem base do projeto
+
+- Jest – Testes unitários e end-to-end
+
+- YFinance API – Fonte de dados de mercado financeiro
+  
+- Portfolio Optimized API (Python) – Serviço externo para cálculo da combinação ideal de investimentos
+
+## Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (>= 18)
+- [MySQL](https://www.mysql.com/)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+
+## Configuração do ambiente
+
+Crie um arquivo `.env` na raiz do projeto com:
+
+```env
+DATABASE_URL="mysql://root:senha@localhost:3306/portfolio_manager"
+```
+
+## Preparação
 
 ```bash
 $ npm install
+$ npx prisma migrate dev --name init
+$ npx prisma generate
+
 ```
 
-## Compile and run the project
+## Rodar projeto
 
 ```bash
-# development
-$ npm run start
-
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Run tests
+## Rodar testes
 
 ```bash
 # unit tests
@@ -57,42 +80,3 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
