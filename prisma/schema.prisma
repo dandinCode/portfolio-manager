@@ -42,7 +42,7 @@ enum StockStatus {
 
 model Stock {
   id            Int         @id @default(autoincrement())
-  symbolId      Int
+  symbolId      Int         @unique
   symbol        StockSymbol @relation(fields: [symbolId], references: [id], name: "StockToSymbol")
   companyName   String
   sector        String
