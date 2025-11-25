@@ -6,7 +6,6 @@ import { StockStatus } from 'generated/prisma';
 @Injectable()
 export class StocksService {
   constructor(private readonly prisma: PrismaService) {}
-
   async createStockSymbol(dto: CreateStockSymbolDto) {
     const existing = await this.prisma.stockSymbol.findUnique({
       where: { symbol: dto.symbol },
@@ -19,7 +18,7 @@ export class StocksService {
     const stockSymbol = await this.prisma.stockSymbol.create({
       data: {
         symbol: dto.symbol,
-        createdById: dto.createdById ?? null,
+        createdById: Number(dto.createdById),
       },
     });
 
