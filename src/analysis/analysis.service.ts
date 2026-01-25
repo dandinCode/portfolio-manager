@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import yahooFinance from 'yahoo-finance2';
+import YahooFinance from 'yahoo-finance2';
 import { GetStocksDto } from './dto/get-stocks.dto';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
@@ -14,6 +14,7 @@ import { oneYearRange, toISODate } from 'src/common/utils/date.util';
 
 @Injectable()
 export class AnalysisService {
+  private readonly yahooFinance = new YahooFinance();
   private readonly optimizerUrl: string;
   private readonly logger = new Logger(AnalysisService.name);
 
@@ -113,7 +114,7 @@ export class AnalysisService {
     companyData: { name: string; sector: string };
     financialData: { dividendYield: number };
   }> {
-    const summary = await yahooFinance.quoteSummary(symbol, {
+    const summary = await this.yahooFinance.quoteSummary(symbol, {
       modules: ['assetProfile', 'summaryDetail', 'price', 'financialData'],
     });
 
@@ -134,7 +135,7 @@ export class AnalysisService {
     symbol: string,
     getStocksDto: GetStocksDto,
   ): Promise<number | null> {
-    const historical = await yahooFinance.chart(symbol, {
+    const historical = await this.yahooFinance.chart(symbol, {
       period1: getStocksDto.start,
       period2: getStocksDto.end,
       interval: '1d',
