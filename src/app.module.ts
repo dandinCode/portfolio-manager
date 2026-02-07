@@ -6,6 +6,8 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { AnalysisModule } from './analysis/analysis.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,9 +15,11 @@ import { PrismaModule } from './prisma/prisma.module';
     HttpModule,
     StocksModule,
     AnalysisModule,
-    PrismaModule
+    PrismaModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {} 
+export class AppModule {}
