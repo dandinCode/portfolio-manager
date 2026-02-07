@@ -2,7 +2,7 @@
 (Em desenvolvimento)
 
 ## Descrição
-O Portfolio Manager é uma aplicação backend desenvolvida em NestJS que tem como objetivo permitir o gerenciamento completo de carteiras de investimento em ações.
+O Projeto Talos é uma aplicação backend desenvolvida em NestJS que tem como objetivo permitir o gerenciamento completo de carteiras de investimento em ações.
 O sistema possibilita que o usuário cadastre, gerencie e avalie ações, bem como monitore o desempenho e o risco total de seu portfólio.
 
 A aplicação integra-se a duas fontes externas principais:
