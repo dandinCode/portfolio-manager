@@ -1,8 +1,14 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +41,35 @@ export class AuthService {
       throw new InternalServerErrorException(
         'Erro ao criar conta. Tente novamente.',
       );
+    }
+  }
+
+  async login(dto: LoginDto) {
+    try {
+      const user = await this.usersService.findByEmail(dto.email);
+
+      if (!user) {
+        throw new UnauthorizedException('Email ou senha inválidos');
+      }
+
+      const passwordValid = await bcrypt.compare(dto.password, user.password);
+
+      if (!passwordValid) {
+        throw new UnauthorizedException('Email ou senha inválidos');
+      }
+
+      return {
+        access_token: this.jwtService.sign({
+          sub: user.id,
+          email: user.email,
+        }),
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Erro ao realizar login');
     }
   }
 }
