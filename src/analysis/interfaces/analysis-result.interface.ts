@@ -3,7 +3,7 @@ export interface AnalysisResult {
   dy_list: number[];
   standard_deviation_list: number[];
   sectors_list: string[];
-  acceptable_risk: number;
+  acceptable_risk?: number;
 }
 
 export interface StockAllocation {
