@@ -28,10 +28,15 @@ export class AuthService {
       });
 
       return {
-        access_token: this.jwtService.sign({
-          sub: user.id,
-          email: user.email,
-        }),
+        access_token: this.jwtService.sign(
+          {
+            sub: user.id,
+            email: user.email,
+          },
+          {
+            expiresIn: '1h',
+          },
+        ),
       };
     } catch (error) {
       if (error.code === 'P2002') {
@@ -59,10 +64,15 @@ export class AuthService {
       }
 
       return {
-        access_token: this.jwtService.sign({
-          sub: user.id,
-          email: user.email,
-        }),
+        access_token: this.jwtService.sign(
+          {
+            sub: user.id,
+            email: user.email,
+          },
+          {
+            expiresIn: '1h',
+          },
+        ),
       };
     } catch (error) {
       if (error instanceof UnauthorizedException) {
