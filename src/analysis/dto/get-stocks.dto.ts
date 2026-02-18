@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsDateString, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsNumber,
+  IsString,
+  IsOptional,
+  Min,
+  Max,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class GetStocksDto {
   @ApiProperty({
@@ -13,21 +22,30 @@ export class GetStocksDto {
   @ApiProperty({
     example: '2024-01-01',
     description: 'Data inicial do período de análise (ISO 8601)',
+    required: false,
   })
+  @IsOptional()
   @IsDateString()
-  start: string;
+  start?: string;
 
   @ApiProperty({
     example: '2024-12-31',
     description: 'Data final do período de análise (ISO 8601)',
+    required: false,
   })
+  @IsOptional()
   @IsDateString()
-  end: string;
+  end?: string;
 
   @ApiProperty({
     example: 2.5,
     description: 'Nível de risco aceitável para otimização (%)',
+    required: false,
   })
+  @IsOptional()
   @IsNumber()
-  acceptableRisk: number;
+  @Min(0)
+  @Max(100)
+  @Type(() => Number)
+  acceptableRisk?: number;
 }
