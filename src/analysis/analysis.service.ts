@@ -27,8 +27,6 @@ export class AnalysisService {
   }
 
   async getStocksData(getStocksDto: GetStocksDto): Promise<AnalysisResult> {
-    this.validateAndSetDateRange(getStocksDto);
-
     const stock_list: string[] = [];
     const dy_list: number[] = [];
     const std_dev_list: number[] = [];
@@ -53,18 +51,22 @@ export class AnalysisService {
     };
   }
 
-  private validateAndSetDateRange(getStocksDto: GetStocksDto): void {
-    if (!getStocksDto.start || !getStocksDto.end) {
-      const range = oneYearRange();
-      getStocksDto.start = range.start;
-      getStocksDto.end = range.end;
-    } else {
-      getStocksDto.start =
-        toISODate(getStocksDto.start) ?? oneYearRange().start;
-      getStocksDto.end = toISODate(getStocksDto.end) ?? oneYearRange().end;
+  private resolveDateRange(dto: GetStocksDto): {
+    start: string;
+    end: string;
+  } {
+    if (!dto.start || !dto.end) {
+      return oneYearRange();
     }
 
-    console.log(`${getStocksDto.start} - ${getStocksDto.end}`);
+    const start = toISODate(dto.start);
+    const end = toISODate(dto.end);
+
+    if (!start || !end) {
+      return oneYearRange();
+    }
+
+    return { start, end };
   }
 
   private async processStockSymbol(
@@ -135,9 +137,10 @@ export class AnalysisService {
     symbol: string,
     getStocksDto: GetStocksDto,
   ): Promise<number | null> {
+    const { start, end } = this.resolveDateRange(getStocksDto);
     const historical = await this.yahooFinance.chart(symbol, {
-      period1: getStocksDto.start,
-      period2: getStocksDto.end,
+      period1: start,
+      period2: end,
       interval: '1d',
     });
 
