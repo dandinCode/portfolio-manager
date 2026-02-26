@@ -19,6 +19,8 @@ async function bootstrap() {
     }),
   );
 
+  app.enableShutdownHooks();
+
   const config = new DocumentBuilder()
     .setTitle('Portfolio Manager API')
     .setDescription('API para análise e otimização de portfólios de ações')
