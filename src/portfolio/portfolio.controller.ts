@@ -13,6 +13,7 @@ export class PortfolioController {
     return this.portfolioService.create(req.user.sub, dto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findMyPortfolios(@Req() req: any) {
     return this.portfolioService.findAllByUser(req.user.sub);
