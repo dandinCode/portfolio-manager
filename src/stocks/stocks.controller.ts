@@ -1,19 +1,21 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { StocksService } from './stocks.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateStockSymbolDto } from './dto/create-stock-symbol.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('stocks')
 export class StocksController {
   constructor(private readonly stocksService: StocksService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('symbol')
   @ApiOperation({ summary: 'Cadastra um novo símbolo de ação' })
   @ApiResponse({ status: 201, description: 'Símbolo cadastrado com sucesso' })
   @ApiResponse({ status: 409, description: 'Símbolo já existe' })
   @ApiBody({ type: CreateStockSymbolDto })
-  async create(@Body() dto: CreateStockSymbolDto) {
-    return this.stocksService.createStockSymbol(dto);
+  async create(@Body() dto: CreateStockSymbolDto, @Req() req: any) {
+    return this.stocksService.createStockSymbol(dto, req.user.sub);
   }
 
   @Get('symbols')
