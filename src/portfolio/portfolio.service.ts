@@ -56,10 +56,25 @@ export class PortfolioService {
   async findAllByUser(userId: number) {
     return this.prisma.portfolio.findMany({
       where: { userId },
+
       include: {
         portfolioStocks: {
           include: {
-            stock: true,
+            stock: {
+              select: {
+                id: true,
+                companyName: true,
+                sector: true,
+                dividendYield: true,
+                volatility: true,
+                lastFetchedAt: true,
+                symbol: {
+                  select: {
+                    symbol: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
