@@ -72,7 +72,7 @@ export class AuthService {
             email: user.email,
           },
           {
-            expiresIn: '1h',
+            expiresIn: '24h',
           },
         ),
       };
