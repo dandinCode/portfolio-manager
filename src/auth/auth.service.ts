@@ -31,6 +31,7 @@ export class AuthService {
         access_token: this.jwtService.sign(
           {
             sub: user.id,
+            name: user.name,
             email: user.email,
           },
           {
@@ -67,6 +68,7 @@ export class AuthService {
         access_token: this.jwtService.sign(
           {
             sub: user.id,
+            name: user.name,
             email: user.email,
           },
           {
