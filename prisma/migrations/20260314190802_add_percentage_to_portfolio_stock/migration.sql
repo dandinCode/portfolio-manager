@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `portfoliostock` ADD COLUMN `percentage` DOUBLE NOT NULL DEFAULT 0;
