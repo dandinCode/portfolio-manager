@@ -20,6 +20,8 @@ export class CreatePortfolioDto {
   totalReturn?: number;
 
   @IsArray()
-  @IsString({ each: true })
-  stocks: string[];
+  stocks: {
+    stock: string;
+    percentage: number;
+  }[];
 }

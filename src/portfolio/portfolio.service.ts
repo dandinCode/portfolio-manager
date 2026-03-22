@@ -12,7 +12,7 @@ export class PortfolioService {
     }
 
     const symbols = dto.stocks
-      .map((s) => s.trim().toUpperCase())
+      .map((s) => s.stock.trim().toUpperCase())
       .filter((s): s is string => !!s);
 
     const stocks = await this.prisma.stock.findMany({
@@ -23,11 +23,18 @@ export class PortfolioService {
           },
         },
       },
+      include: {
+        symbol: true,
+      },
     });
 
     if (!stocks.length) {
       throw new BadRequestException('Nenhuma ação válida encontrada');
     }
+
+    const allocationMap = Object.fromEntries(
+      dto.stocks.map((s) => [s.stock.toUpperCase(), s.percentage]),
+    );
 
     const portfolio = await this.prisma.portfolio.create({
       data: {
@@ -35,16 +42,33 @@ export class PortfolioService {
         userId,
         totalRisk: dto.totalRisk,
         totalReturn: dto.totalReturn,
+
         portfolioStocks: {
-          create: stocks.map((stock) => ({
-            stockId: stock.id,
-          })),
+          create: stocks.map((stock) => {
+            const percentage = allocationMap[stock.symbol.symbol];
+
+            if (percentage === undefined) {
+              throw new BadRequestException(
+                `Percentual não encontrado para ${stock.symbol.symbol}`,
+              );
+            }
+
+            return {
+              stockId: stock.id,
+              percentage,
+            };
+          }),
         },
       },
+
       include: {
         portfolioStocks: {
           include: {
-            stock: true,
+            stock: {
+              include: {
+                symbol: true,
+              },
+            },
           },
         },
       },
