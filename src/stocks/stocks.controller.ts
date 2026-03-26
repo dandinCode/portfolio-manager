@@ -23,4 +23,9 @@ export class StocksController {
   async findAll() {
     return this.stocksService.findAllStockSymbols();
   }
+
+  @Get('summary')
+  async getSummary() {
+    return this.stocksService.getStocksSummary();
+  }
 }

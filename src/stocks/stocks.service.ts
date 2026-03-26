@@ -69,4 +69,22 @@ export class StocksService {
       },
     });
   }
+
+  async getStocksSummary() {
+    const totalAssets = await this.prisma.stock.count();
+
+    const lastUpdatedStock = await this.prisma.stock.findFirst({
+      orderBy: {
+        lastFetchedAt: 'desc',
+      },
+      select: {
+        lastFetchedAt: true,
+      },
+    });
+
+    return {
+      totalAssets,
+      lastUpdate: lastUpdatedStock?.lastFetchedAt || null,
+    };
+  }
 }
