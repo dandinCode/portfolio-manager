@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 
@@ -106,5 +111,27 @@ export class PortfolioService {
         createdAt: 'desc',
       },
     });
+  }
+
+  async deletePortfolio(userId: number, portfolioId: number) {
+    const portfolio = await this.prisma.portfolio.findUnique({
+      where: { id: portfolioId },
+    });
+
+    if (!portfolio) {
+      throw new NotFoundException('Portfólio não encontrado');
+    }
+    if (portfolio.userId !== userId) {
+      throw new ForbiddenException('Sem permissão para excluir este portfólio');
+    }
+
+    await this.prisma.portfolioStock.deleteMany({
+      where: { portfolioId },
+    });
+    await this.prisma.portfolio.delete({
+      where: { id: portfolioId },
+    });
+
+    return { message: 'Portfólio excluído com sucesso' };
   }
 }

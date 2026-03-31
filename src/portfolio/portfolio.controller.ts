@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -17,5 +26,13 @@ export class PortfolioController {
   @Get()
   async findMyPortfolios(@Req() req: any) {
     return this.portfolioService.findAllByUser(req.user.sub);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Req() req) {
+    const userId = req.user.sub;
+
+    return this.portfolioService.deletePortfolio(userId, Number(id));
   }
 }
