@@ -25,6 +25,7 @@ export class StocksController {
   }
 
   @Get('summary')
+  @ApiOperation({ summary: 'Retornar informações sobre os ativos cadastrados, como total de ativos e data da última atualização' })
   async getSummary() {
     return this.stocksService.getStocksSummary();
   }
