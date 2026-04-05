@@ -33,6 +33,7 @@ export class AuthService {
             sub: user.id,
             name: user.name,
             email: user.email,
+            createdAt: user.createdAt,
           },
           {
             expiresIn: '24h',
@@ -70,6 +71,7 @@ export class AuthService {
             sub: user.id,
             name: user.name,
             email: user.email,
+            createdAt: user.createdAt,
           },
           {
             expiresIn: '24h',
