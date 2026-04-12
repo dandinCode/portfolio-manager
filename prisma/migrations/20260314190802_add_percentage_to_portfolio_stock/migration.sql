@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `portfoliostock` ADD COLUMN `percentage` DOUBLE NOT NULL DEFAULT 0;
+ALTER TABLE `PortfolioStock` ADD COLUMN `percentage` DOUBLE NOT NULL DEFAULT 0;

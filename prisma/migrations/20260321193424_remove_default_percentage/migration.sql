@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `portfoliostock` ALTER COLUMN `percentage` DROP DEFAULT;
+ALTER TABLE `PortfolioStock` ALTER COLUMN `percentage` DROP DEFAULT;
