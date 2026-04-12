@@ -8,7 +8,7 @@ import {
   AnalysisResult,
   PortfolioOptimization,
 } from './interfaces/analysis-result.interface';
-import { StockStatus } from 'generated/prisma';
+import { StockStatus } from '@prisma/client';
 import { StocksService } from 'src/stocks/stocks.service';
 import { oneYearRange, toISODate } from 'src/common/utils/date.util';
 

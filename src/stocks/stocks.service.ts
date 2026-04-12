@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateStockSymbolDto } from './dto/create-stock-symbol.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { StockStatus } from 'generated/prisma';
+import { StockStatus } from '@prisma/client';
 
 @Injectable()
 export class StocksService {
