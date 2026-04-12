@@ -5,6 +5,6 @@
 
 */
 -- AlterTable
-ALTER TABLE `user` DROP COLUMN `senha`,
+ALTER TABLE `User` DROP COLUMN `senha`,
     ADD COLUMN `password` VARCHAR(191) NULL,
     ADD COLUMN `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
