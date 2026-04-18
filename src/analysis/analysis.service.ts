@@ -197,6 +197,16 @@ export class AnalysisService {
   }> {
     const analysis = await this.getStocksData(getStocksDto);
 
+    const sectorError = this.validateSectors(analysis.sectors_list);
+
+    if (sectorError) {
+      return {
+        analysis,
+        optimization: null,
+        error: sectorError,
+      };
+    }
+
     try {
       const response = await firstValueFrom(
         this.httpService.post(this.optimizerUrl, analysis),
@@ -207,10 +217,8 @@ export class AnalysisService {
         optimization: response.data,
       };
     } catch (error) {
-
       const apiError =
-        error.response?.data?.detail ||
-        'Falha ao gerar otimização';
+        error.response?.data?.detail || 'Falha ao gerar otimização';
 
       console.error(apiError);
       return {
@@ -219,5 +227,26 @@ export class AnalysisService {
         error: apiError,
       };
     }
+  }
+
+  private validateSectors(sectors: string[]): string | null {
+    const uniqueSectors = new Set(sectors);
+    const minSectors = 5;
+
+    if (uniqueSectors.size >= minSectors) {
+      return null;
+    }
+
+    const sectorCount: Record<string, number> = {};
+
+    for (const sector of sectors) {
+      sectorCount[sector] = (sectorCount[sector] || 0) + 1;
+    }
+
+    const duplicatedSectors = Object.entries(sectorCount)
+      .filter(([_, count]) => count > 1)
+      .map(([sector, count]) => `${sector} (${count}x)`);
+
+    return `São necessários pelo menos ${minSectors} setores diferentes. Setores repetidos: ${duplicatedSectors.join(', ')}`;
   }
 }
