@@ -207,11 +207,16 @@ export class AnalysisService {
         optimization: response.data,
       };
     } catch (error) {
-      console.error('Error calling optimization API:', error.message);
+
+      const apiError =
+        error.response?.data?.detail ||
+        'Falha ao gerar otimização';
+
+      console.error(apiError);
       return {
         analysis,
         optimization: null,
-        error: 'Failed to call optimization API',
+        error: apiError,
       };
     }
   }
