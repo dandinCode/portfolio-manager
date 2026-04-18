@@ -237,16 +237,6 @@ export class AnalysisService {
       return null;
     }
 
-    const sectorCount: Record<string, number> = {};
-
-    for (const sector of sectors) {
-      sectorCount[sector] = (sectorCount[sector] || 0) + 1;
-    }
-
-    const duplicatedSectors = Object.entries(sectorCount)
-      .filter(([_, count]) => count > 1)
-      .map(([sector, count]) => `${sector} (${count}x)`);
-
-    return `São necessários pelo menos ${minSectors} setores diferentes. Setores repetidos: ${duplicatedSectors.join(', ')}`;
+    return `São necessários pelo menos ${minSectors} setores diferentes. Atualmente você tem apenas ${uniqueSectors.size}.`;
   }
 }
