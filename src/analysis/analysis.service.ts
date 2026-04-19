@@ -230,13 +230,13 @@ export class AnalysisService {
   }
 
   private validateSectors(sectors: string[]): string | null {
-    const uniqueSectors = new Set(sectors);
+    const uniqueSectors = Array.from(new Set(sectors));
     const minSectors = 5;
 
-    if (uniqueSectors.size >= minSectors) {
+    if (uniqueSectors.length >= minSectors) {
       return null;
     }
 
-    return `São necessários pelo menos ${minSectors} setores diferentes. Atualmente você tem apenas ${uniqueSectors.size}.`;
+    return `São necessários pelo menos ${minSectors} setores diferentes. Atualmente você tem ${uniqueSectors.length}: ${uniqueSectors.join(', ')}.`;
   }
 }
