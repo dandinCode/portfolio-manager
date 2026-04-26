@@ -1,9 +1,10 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, UseGuards, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -53,10 +54,16 @@ export class AuthController {
 
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: false, 
+      secure: false,
       sameSite: 'lax',
     });
 
     return { message: 'Login realizado com sucesso' };
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard('jwt'))
+  me(@Req() req) {
+    return req.user;
   }
 }
