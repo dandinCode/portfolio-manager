@@ -85,4 +85,10 @@ export class AuthController {
   me(@Req() req) {
     return req.user;
   }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token');
+    return { message: 'Logout realizado com sucesso' };
+  }
 }
