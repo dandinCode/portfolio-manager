@@ -46,8 +46,8 @@ export class AuthController {
 
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
     });
 
     return { message: 'Conta criada com sucesso' };
