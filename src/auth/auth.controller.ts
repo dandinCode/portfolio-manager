@@ -1,8 +1,9 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,7 +45,18 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
-  login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { access_token } = await this.authService.login(dto);
+
+    res.cookie('token', access_token, {
+      httpOnly: true,
+      secure: false, 
+      sameSite: 'lax',
+    });
+
+    return { message: 'Login realizado com sucesso' };
   }
 }
