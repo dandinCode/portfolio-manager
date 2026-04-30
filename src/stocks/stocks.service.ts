@@ -26,9 +26,23 @@ export class StocksService {
   }
 
   async findAllStockSymbols() {
-    return this.prisma.stockSymbol.findMany({
-      include: { createdBy: true },
+    const data = await this.prisma.stockSymbol.findMany({
+      include: {
+        createdBy: true,
+        stocks: {
+          select: {
+            companyName: true,
+            sector: true,
+          },
+        },
+      },
     });
+
+    return data.map((item) => ({
+      ...item,
+      company: item.stocks[0]?.companyName,
+      sector: item.stocks[0]?.sector,
+    }));
   }
 
   async upsertStockSymbol(symbol: string, status: StockStatus, userId: number) {
