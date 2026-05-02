@@ -20,7 +20,6 @@ import { PortfolioModule } from './portfolio/portfolio.module';
     UsersModule,
     AuthModule,
     PortfolioModule,
-    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
