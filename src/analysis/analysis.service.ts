@@ -217,10 +217,21 @@ export class AnalysisService {
         optimization: response.data,
       };
     } catch (error) {
-      const apiError =
-        error.response?.data?.detail || 'Falha ao gerar otimização';
+      const detail = error.response?.data?.detail;
+      let apiError: string;
 
-      console.error(apiError);
+      if (typeof detail === 'string') {
+        apiError = detail;
+      } else if (Array.isArray(detail)) {
+        apiError = detail.map((d) => d?.msg ?? String(d)).join('; ');
+      } else if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+        apiError =
+          'Serviço de otimização indisponível.';
+      } else {
+        apiError = 'Falha ao gerar otimização';
+      }
+
+      this.logger.warn(`Otimização falhou: ${apiError}`);
       return {
         analysis,
         optimization: null,
