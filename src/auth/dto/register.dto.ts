@@ -1,13 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsEmail, IsString, MinLength, Matches } from 'class-validator';
+import {
+  NAME_PATTERN,
+  NAME_VALIDATION_MESSAGE,
+} from 'src/common/utils/name.validation';
 
 export class RegisterDto {
   @ApiProperty({
     example: 'João Silva',
-    minLength: 3,
+
+    minLength: 5,
   })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
-  @MinLength(3, { message: 'Nome deve ter no mínimo 3 caracteres' })
+  @Matches(NAME_PATTERN, { message: NAME_VALIDATION_MESSAGE })
   name: string;
 
   @ApiProperty({
@@ -18,6 +25,7 @@ export class RegisterDto {
 
   @ApiProperty({
     example: 'Senha@123',
+
     minLength: 8,
   })
   @MinLength(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
